@@ -58,24 +58,23 @@
                 })
                 .then(function (json) {
                     const result = JSON.stringify(json);
-                    const { authURL } = JSON.parse(result);
+                    const { authUrl } = JSON.parse(result);
                     resultElement.innerText = result;
-                    resultLink.href = authURL;
+                    resultLink.href = authUrl;
                 });
         };
 
         const codeValue = document.getElementById("code");
         const getAccessToken = document.getElementById("getToken");
         const accessTokenElement = document.getElementById("accessToken");
-        const getToken =
-            "https://rwmanw8a34.execute-api.eu-central-1.amazonaws.com/dev/api/token/";
+        const getToken = "https://rwmanw8a34.execute-api.eu-central-1.amazonaws.com/dev/api/token";
 
         getAccessToken.onclick = function () {
             let code = codeValue.value;
 
-            //if auth code isn't url encoded, then url encode it.
+            // if the authorization code is not URL-encoded, then URL-encode it.
             if (decodeURIComponent(code) === code) {
-                code - encodeURIComponent(codeValue.value);
+                code = encodeURIComponent(codeValue.value);
             }
             const getTokenRequest = getToken + "/" + code;
             fetch(getTokenRequest)
@@ -86,8 +85,24 @@
                     accessTokenElement.innerText = JSON.stringify(json);
                 });
         };
-            //---------End of step 2
+        //---------End of step 2
 
+        // -- Step 3
+        const getEvents = document.getElementById("getEvents");
+        const events = document.getElementById("events");
+        const getCalendarEvents = "https://rwmanw8a34.execute-api.eu-central-1.amazonaws.com/dev/api/get-events";
+
+        getEvents.onclick = function () {
+            const { access_token } = JSON.parse(accessTokenElement.innerText);
+            const eventRequest = getCalendarEvents + "/" + access_token;
+            fetch(eventRequest)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (json) {
+                    events.innerText = JSON.stringify(json, null, 2);
+                });
+        };
     </script>
 </body>
 
