@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import './App.css';
-import EventList from './EventList';
-import CitySearch from './CitySearch';
-import NumberOfEvents from './NumberOfEvents';
-import { extractLocations, getEvents } from './api';
+import EventList from './component/EventList';
+import CitySearch from './component/CitySearch';
+import NumberOfEvents from './component/NumberOfEvents';
+import { extractLocations, getEvents } from './component/api';
 import './nprogress.css';
 
 class App extends Component {
   state = {
     events: [],
-    locations: []
+    locations: [],
+    currentLocation: "all",
+    numberOfEvents: 32,
   }
 
   componentDidMount() {
@@ -31,9 +33,17 @@ class App extends Component {
         events :
         events.filter((event) => event.location === location);
       this.setState({
-        events: locationEvents
+        events: locationEvents.slice(0, numberOfEvents)
       });
     });
+  }
+
+  updateEventCount = (eventCount) => {
+    const { currentLocation } = this.state;
+    this.setState({
+      numberOfEvents: eventCount
+    });
+    this.updateEvents(currentLocation, eventCount);
   }
   render() {
     return (
