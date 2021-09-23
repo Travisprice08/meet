@@ -8,7 +8,7 @@ export const extractLocations = (events) => {
     return locations;
 };
 
-const checkToken = async (accessToken) => {
+export const checkToken = async (accessToken) => {
     const result = await fetch(
         `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
     )
@@ -54,7 +54,9 @@ export const getEvents = async () => {
         NProgress.done();
         return mockData;
     }
+
     const token = await getAccessToken();
+
     if (token) {
         removeQuery();
         const url = `https://rwmanw8a34.execute-api.eu-central-1.amazonaws.com/dev/api/get-events/${token}`;
