@@ -36,11 +36,11 @@ defineFeature(feature, test => {
         });
 
         when('the user clicked on a expand details button for a specific event', () => {
-            EventWrapper.find(".toggleBtn").at(1).simulate("click");
+            EventWrapper.find(".toggleBtn").at(0).simulate("click");
         });
 
         then('the user should see details for this event', () => {
-            expect(EventWrapper.find(".eventDetails")).toHaveLength(2);
+            expect(EventWrapper.find(".eventDetails")).toHaveLength(1);
         });
     });
 
@@ -49,12 +49,12 @@ defineFeature(feature, test => {
             AppWrapper = mount(<App />);
             EventListWrapper = mount(<EventList events={mockData} />);
             EventWrapper = mount(<Event event={mockData[0]} />);
-            EventWrapper.find(".toggleBtn").at(1).simulate("click");
+            EventWrapper.find(".toggleBtn").at(0).simulate("click");
             EventWrapper.find(".eventDetails");
         });
 
         when('the user clicks on the collapse button', () => {
-            EventWrapper.find(".toggleBtn").at(1).simulate("click");
+            EventWrapper.find(".toggleBtn").at(0).simulate("click");
         });
 
         then('the event details should be hidden', () => {
