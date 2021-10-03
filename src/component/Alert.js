@@ -30,8 +30,14 @@ class InfoAlert extends Alert {
 
 class ErrorAlert extends Alert {
     constructor(props) {
+        super(props, "orange");
+    }
+}
+
+class WarningAlert extends Alert {
+    constructor(props) {
         super(props, "red");
     }
 }
 
-export { InfoAlert, ErrorAlert };
+export { InfoAlert, ErrorAlert, WarningAlert };

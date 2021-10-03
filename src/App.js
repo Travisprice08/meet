@@ -5,6 +5,7 @@ import CitySearch from './component/CitySearch';
 import NumberOfEvents from './component/NumberOfEvents';
 import { extractLocations, getEvents } from './component/api';
 import './nprogress.css';
+import { WarningAlert } from './component/Alert';
 
 import './App.css';
 
@@ -55,6 +56,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        {!navigator.onLine ? (<WarningAlert text='No internet connection' />) : (<WarningAlert text='' />)}
         <CitySearch locations={this.state.locations} updateEvents={this.updateEvents} />
         <EventList events={this.state.events} />
         <NumberOfEvents updateEventCount={(e) => this.updateEventCount(e)} />
