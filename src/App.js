@@ -6,7 +6,7 @@ import NumberOfEvents from './component/NumberOfEvents';
 import { extractLocations, getEvents, checkToken, getAccessToken } from './component/api';
 import './nprogress.css';
 import { WarningAlert } from './component/Alert';
-import WelcomeScreen from './component/WelcomeScreen';
+import WelcomeScreen from './WelcomeScreen';
 
 import './App.css';
 
