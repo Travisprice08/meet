@@ -3,8 +3,18 @@ WelcomeScreen {
     width: 100%;
     height: 100%;
     top: 0;
-    background: white;
+    background-image: url("../src/Img/MissionBay.jpg");
+    /* background: white; */
     }
+
+    h1 {
+        color: #fff;
+    }
+
+    h4 {
+        color: #fff;
+    }
+
     .login-button {
     color: #494949;
     text-transform: uppercase;
@@ -29,7 +39,7 @@ WelcomeScreen {
     }
 
     .google-btn:active {
-        background: #1669f2;
+        background: #0154fc;
         }
         .google-icon-wrapper {
         position: absolute;

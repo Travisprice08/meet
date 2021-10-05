@@ -12,7 +12,7 @@ class Event extends Component {
         })
     };
 
-    //mockData = JSON.parse(JSON.stringify(mockData));
+    mockData = JSON.parse(JSON.stringify(mockData));
 
     render() {
         var { btnText, event } = this.props;
