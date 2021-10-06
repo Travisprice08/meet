@@ -5,14 +5,24 @@ import {
 } from 'recharts';
 
 const EventGenre = ({ events }) => {
+
     const [data, setData] = useState([]);
+    // const setData = useState([]);
     const genres = ['React', 'JavaScripst', 'Node', 'jQuery', 'AngularJS'];
     const COLORS = ['#FCECDD', '#FEDDBE', '#FFC288', '#FEA82F', '#FF6701'];
 
+    //Example data to get pie chart to appear
+    // const data = [
+    //     { name: 'GROUP A', value: 400 },
+    //     { name: 'GROUP B', value: 300 },
+    //     { name: 'GROUP C', value: 200 },
+    //     { name: 'GROUP D', value: 100 }
+    // ]
+
     const getData = () => {
         const data = genres.map((genre) => {
-            const value = events.filter(({ summary }) =>
-                summary.split(' ').includes(genre)
+            const value = events.filter((event) =>
+                event.summary.split(' ').includes(genre)
             ).length;
             return { name: genre, value };
         });
@@ -22,7 +32,7 @@ const EventGenre = ({ events }) => {
     useEffect(() => { setData(() => getData()); }, [events]);
 
     return (
-        <ResponsiveContainer height={400} >
+        <ResponsiveContainer height={400} width={400} >
             <PieChart width={400} height={400}>
                 <Pie
                     data={data}

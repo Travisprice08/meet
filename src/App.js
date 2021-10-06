@@ -19,16 +19,30 @@ class App extends Component {
     locations: [],
     currentLocation: "all",
     numberOfEvents: 12,
+    warningText: "",
     showWelcomeScreen: undefined
   }
 
-
-
-  componentWillUnmount() {
-    this.mounted = false;
+  updateEventCount = (eventCount) => {
+    const { currentLocation } = this.state;
+    this.setState({
+      numberOfEvents: eventCount
+    });
+    this.updateEvents(currentLocation, eventCount);
   }
 
   updateEvents = (location) => {
+    // If offline
+    if (!navigator.onLine) {
+      this.setState({
+        warningText: "You are offline, information may be inaccurate."
+      });
+    } else {
+      this.setState({
+        warningText: ""
+      });
+    }
+
     getEvents().then((events) => {
       //console.log("Events:", events, this.state.numberOfEvents, location);
       const locationEvents = (location === 'all') ?
@@ -39,14 +53,6 @@ class App extends Component {
         events: locationEvents.slice(0, this.state.numberOfEvents)
       });
     });
-  }
-
-  updateEventCount = (eventCount) => {
-    const { currentLocation } = this.state;
-    this.setState({
-      numberOfEvents: eventCount
-    });
-    this.updateEvents(currentLocation, eventCount);
   }
 
   getData = () => {
@@ -68,11 +74,33 @@ class App extends Component {
     this.setState({ showWelcomeScreen: !(code || isTokenValid) });
     if ((code || isTokenValid) && this.mounted) {
       getEvents().then((events) => {
+        if (!navigator.onLine) {
+          this.setState({
+            warningText: "You are offline, information may be inaccurate."
+          });
+        } else {
+          this.setState({
+            warningText: ""
+          });
+        }
         if (this.mounted) {
-          this.setState({ events, locations: extractLocations(events) });
+          this.setState({
+            events: events.slice(0, this.state.numberOfEvents),
+            locations: extractLocations(events)
+          });
         }
       });
     }
+    if (window.location.href.startsWith("http://localhost")) {
+      this.setState({
+        showWelcomeScreen: false
+      });
+    }
+  }
+
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render() {
@@ -80,34 +108,55 @@ class App extends Component {
     if (this.state.showWelcomeScreen === undefined) return <div className="App" />
     return (
       <Container className="App">
-        <h1>Meet App</h1>
-        {!navigator.onLine ? (<WarningAlert text='No internet connection' />) : (<WarningAlert text='' />)}
-        <CitySearch locations={this.state.locations} updateEvents={this.updateEvents} />
-        <NumberOfEvents updateEventCount={(e) => this.updateEventCount(e)} />
-
-        <h4>Events in each city</h4>
-        <div className="data-vis-wrapper">
-          <EventGenre events={events} />
-          <ResponsiveContainer height={400}>
-            <ScatterChart
-              width={800}
-              height={400}
-              margin={{
-                top: 20, right: 20, bottom: 20, left: 20,
-              }}
-            >
-              <CartesianGrid />
-              <XAxis dataKey="city" type="category" name="city" />
-              <YAxis dataKey="number" type="number" name="number of events" />
-              <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-              <Scatter data={this.getData()} fill="#8884d8" />
-            </ScatterChart>
-          </ResponsiveContainer>
-        </div>
-        <Row className="EventList" style={{ display: this.state.showWelcomeScreen ? 'none' : 'block' }}>
-          <EventList events={this.state.events} />
+        <Row>
+          <Col md={12}>
+            <WelcomeScreen showWelcomeScreen={this.state.showWelcomeScreen} getAccessToken={() => { getAccessToken() }} />
+          </Col>
         </Row>
-        <WelcomeScreen showWelcomeScreen={this.state.showWelcomeScreen} getAccessToken={() => { getAccessToken() }} />
+        <Row style={{ display: this.state.showWelcomeScreen ? 'none' : 'block' }}>
+          <Col md={12}>
+            <h1>Meet App</h1>
+            {!navigator.onLine ? (<WarningAlert text='No internet connection' />) : (<WarningAlert text='' />)}
+          </Col>
+        </Row>
+        <Row style={{ display: this.state.showWelcomeScreen ? 'none' : 'block' }}>
+          <Col md={12}>
+            <CitySearch locations={this.state.locations} updateEvents={this.updateEvents} />
+          </Col>
+        </Row>
+        <Row style={{ display: this.state.showWelcomeScreen ? 'none' : 'block' }}>
+          <Col md={12}>
+            <NumberOfEvents updateEventCount={(e) => this.updateEventCount(e)} />
+          </Col>
+        </Row>
+        <Row style={{ display: this.state.showWelcomeScreen ? 'none' : 'block' }}>
+          <h4>Events in each city</h4>
+          <div className="data-vis-wrapper">
+            <div className="pie-chart">
+              <EventGenre events={events} />
+            </div>
+            <ResponsiveContainer height={400}>
+              <ScatterChart
+                width={800}
+                height={400}
+                margin={{
+                  top: 20, right: 20, bottom: 20, left: 20,
+                }}
+              >
+                <CartesianGrid />
+                <XAxis dataKey="city" type="category" name="city" />
+                <YAxis allowDecimals={false} dataKey="number" type="number" name="number of events" />
+                <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                <Scatter data={this.getData()} fill="#8884d8" />
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+        </Row>
+        <Row className="EventList" style={{ display: this.state.showWelcomeScreen ? 'none' : 'block' }}>
+          <Col md={12}>
+            <EventList events={this.state.events} />
+          </Col>
+        </Row>
       </Container>
     );
   }

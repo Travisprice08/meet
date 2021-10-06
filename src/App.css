@@ -86,6 +86,22 @@ input[type="number"] {
   position: relative;
 }
 
+.event-summary {
+  color: #646464;
+}
+
+.event-start-date {
+  color: #646464;
+}
+
+.event-location {
+  color: #646464;
+}
+
+.eventDetails {
+  color: #646464;
+}
+
 .details-btn {
   position: absolute;
   right: 5px;
@@ -198,8 +214,6 @@ input[type="number"] {
   letter-spacing: 0.2px;
   font-family: "Roboto";
 }
-
-
 
 @media only screen and (min-width: 992px) {
   .data-vis-wrapper {
